@@ -8,7 +8,7 @@ services:
     ports:
       - "3308:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pAditya@1234"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uvaishnavi", "-pAditya@1234"]
       interval: 15s
       timeout: 10s
       retries: 10
@@ -26,7 +26,7 @@ services:
         condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/studentdb
-      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_USERNAME: vaishnavi
       SPRING_DATASOURCE_PASSWORD: Aditya@1234
     restart: on-failure
     networks:
