@@ -1,36 +1,41 @@
+version: '3.8'
+
 services:
-  mysql:
+
+  mysql-db:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: Aditya@1234
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: studentdb
+      MYSQL_USER: student
+      MYSQL_PASSWORD: student
     ports:
-      - "3308:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uvaishnavi", "-pAditya@1234"]
-      interval: 15s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
+      - "3307:3306"
     networks:
       - student_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  app:
-    image: sivavaishnavi/crud-app:latest
+  crud-app:
+    build: .                          # ← MUST have this
     container_name: crud-app
     ports:
-      - "8081:8081"
-    depends_on:
-      mysql:
-        condition: service_healthy
+      - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/studentdb
-      SPRING_DATASOURCE_USERNAME: vaishnavi
-      SPRING_DATASOURCE_PASSWORD: Aditya@1234
-    restart: on-failure
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/studentdb?useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: student
+      SPRING_DATASOURCE_PASSWORD: student
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      mysql-db:
+        condition: service_healthy
     networks:
       - student_network
+    restart: on-failure
 
 networks:
   student_network:
