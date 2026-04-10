@@ -1,12 +1,13 @@
 package com.example.demo;
 
 import javax.persistence.Column;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Entity;
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity; 
+import javax.persistence.Id;
 
 @Entity
 @Table(name = "student")
