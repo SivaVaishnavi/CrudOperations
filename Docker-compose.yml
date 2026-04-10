@@ -6,10 +6,9 @@ services:
     image: mysql:8.0
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: studentdb
-      MYSQL_USER: student
-      MYSQL_PASSWORD: student
+      MYSQL_USER: vaishnavi
+      MYSQL_PASSWORD: Aditya@1234
     ports:
       - "3307:3306"
     networks:
@@ -21,14 +20,14 @@ services:
       retries: 5
 
   crud-app:
-    build: .                          # ← MUST have this
+    build: .
     container_name: crud-app
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/studentdb?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: student
-      SPRING_DATASOURCE_PASSWORD: student
+      SPRING_DATASOURCE_USERNAME: vaishnavi
+      SPRING_DATASOURCE_PASSWORD: Aditya@1234
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       mysql-db:
