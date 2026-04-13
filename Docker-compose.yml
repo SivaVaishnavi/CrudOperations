@@ -1,23 +1,23 @@
-version: '3.8'
-
 services:
-
   mysql-db:
     image: mysql:8.0
     container_name: mysql-db
     environment:
+      MYSQL_ROOT_PASSWORD: "Aditya@1234"
       MYSQL_DATABASE: studentdb
       MYSQL_USER: vaishnavi
-      MYSQL_PASSWORD: Aditya@1234
-    ports:
-      - "3307:3306"
+      MYSQL_PASSWORD: "Aditya@1234"
+    # Added Volume to save data on your local machine
+    volumes:
+      - mysql_student_data:/var/lib/mysql
     networks:
       - student_network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "vaishnavi", "-pAditya@1234"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
 
   crud-app:
     build: .
@@ -27,15 +27,20 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/studentdb?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: vaishnavi
-      SPRING_DATASOURCE_PASSWORD: Aditya@1234
+      SPRING_DATASOURCE_PASSWORD: "Aditya@1234"
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQL8Dialect
     depends_on:
       mysql-db:
         condition: service_healthy
     networks:
       - student_network
-    restart: on-failure
+    restart: on-failure:5
 
 networks:
   student_network:
     driver: bridge
+
+# Define the volume here
+volumes:
+  mysql_student_data:
